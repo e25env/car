@@ -10,6 +10,7 @@ class ReqcarController extends BaseController {
 	*/
 	public function home()
 	{
+		
 		if ( Session::get('level') == '1' )
     	{	
     		$data = DB::table( 'c_req_cars' )
@@ -58,10 +59,11 @@ class ReqcarController extends BaseController {
     * post
     */
     public function post_search_reqcar()
-    {   		  
+    {   
+
 	   if ( Session::get('level') == '1' )
 		{
-			$search  = Input::get( 'search' );	    		    
+			$search  = Input::get( 'search' ); 
 
 			$data = DB::table( 'c_req_cars' )	 
 			 ->where( 'department', 'like', "%$search%" )
@@ -70,9 +72,10 @@ class ReqcarController extends BaseController {
 		     ->orWhere( 'location', 'like', "%$search%" )
 	         ->orderBy( 'req_car_id', 'desc' )
 	         ->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )
-	         ->paginate( 10 );	
-	         
-		    return View::make( 'req_cars.index',  array( 'data' => $data ) );	
+	         ->paginate( 50 )
+	         ->appends(['search' => $search]);	        
+	       
+		    return View::make( 'req_cars.index',  compact('data') );	
 		}
 		else if( Session::get('level') == '2' )
 		{
@@ -90,9 +93,10 @@ class ReqcarController extends BaseController {
 	            })	        
 	         ->orderBy( 'godate','asc' )
 	         ->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )
-	         ->paginate( 10 );	
-	         
-		    return View::make( 'req_cars.index',  array( 'data' => $data ) );	
+	         ->paginate( 50 )
+	         ->appends(['search' => $search]);	        
+	       
+		    return View::make( 'req_cars.index',  compact('data') );
 		}
 		else if( Session::get('level') == '3' )
 		{
@@ -111,9 +115,10 @@ class ReqcarController extends BaseController {
 	         ->where( 'godate', '>=', date('Y-m-d') )
 	         ->orderBy( 'godate','asc' )
 	         ->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )	       
-	         ->paginate( 10 );	
-
-		    return View::make( 'req_cars.index',  array( 'data' => $data ) );
+	         ->paginate( 50 )
+	         ->appends(['search' => $search]);	        
+	       
+		    return View::make( 'req_cars.index',  compact('data') );
 		}	
 		else
 		{
@@ -131,9 +136,10 @@ class ReqcarController extends BaseController {
 			 ->where( 'req_status', '<>', '2' )
 			 ->orderBy( 'godate','asc' )
 			 ->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )	        
-	         ->paginate( 10 );	
-	         
-		    return View::make( 'req_cars.index',  array( 'data' => $data ) );	
+	         ->paginate( 50 )
+	         ->appends(['search' => $search]);	        
+	       
+		    return View::make( 'req_cars.index',  compact('data') );
 		}	
     }
 
@@ -1024,7 +1030,7 @@ class ReqcarController extends BaseController {
 				//$pdf->MultiCell(180, 0, '(นายบุญชัย ธนบัตรชัย)', 0, 'C', 0, 1, '', '', true);
 				$pdf->MultiCell(180, 0, '(นายพิศิษฐ์ สมผดุง)', 0, 'C', 0, 1, '', '', true);
 				$pdf->SetXY(15, 259);
-				$pdf->MultiCell(180, 0, 'ทันตแพทย์เชี่ยวชาญ รักษาการในตำแหน่ง', 0, 'C', 0, 1, '', '', true);
+				$pdf->MultiCell(180, 0, 'ทันตแพทย์เชี่ยวชาญ ปฎิบัติราชการแทน', 0, 'C', 0, 1, '', '', true);
 				$pdf->SetXY(15, 267);
 				$pdf->MultiCell(180, 0, 'ผู้อำนวยการโรงพยาบาลโนนไทย', 0, 'C', 0, 1, '', '', true);
 

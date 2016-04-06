@@ -97,8 +97,11 @@ Route::get( 'reqcar', array( 'uses' => 'ReqcarController@home' ) );
 Route::get( 'reqcar/create', array( 'uses' => 'ReqcarController@create_req' ) );
 Route::get( 'reqcar/create/{id}', array( 'uses' => 'ReqcarController@create_req' ) );
 Route::post( 'reqcar/create', array( 'uses' => 'ReqcarController@post_new_reqcar' ) );
+
 Route::get( 'reqcar/search', array( 'uses' => 'ReqcarController@home' ) );
-Route::post( 'reqcar/search', array( 'uses' => 'ReqcarController@post_search_reqcar' ) );
+//Route::post( 'reqcar/search', array( 'uses' => 'ReqcarController@post_search_reqcar' ) );
+Route::get('search', 'ReqcarController@post_search_reqcar');
+
 Route::get( 'reqcar/edit/{id}', array( 'uses' => 'ReqcarController@edit_reqcar' ) );
 Route::post( 'reqcar/edit/{id}', array( 'uses' => 'ReqcarController@post_edit_reqcar' ) );
 Route::get( 'reqcar/delete/{id}', array( 'uses' => 'ReqcarController@del_reqcar' ) );

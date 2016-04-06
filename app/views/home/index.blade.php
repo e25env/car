@@ -49,7 +49,7 @@
 		</div>		
 		<div class="uk-width-medium-1-2">		
 			<div class="uk-navbar-flip" data-uk-tooltip title="ค้นหาข้อมูล">			
-				{{ Form::open( array( 'url' => 'reqcar/search' , 'class' => 'uk-search uk-hidden-small', 'data-uk-search' => '' ) ) }}				
+				{{ Form::open( array( 'url' => 'search' , 'method' => 'GET' , 'class' => 'uk-search uk-hidden-small', 'data-uk-search' => '' ) ) }}				
 					<input class="uk-search-field" type="search" id="search" name="search" placeholder="ค้นหา..." autocomplete="off">
 					<button class="uk-search-close" type="reset"></button>
 					<div class="uk-dropdown uk-dropdown-search"></div>
@@ -157,7 +157,7 @@
 <br />
 <?php } ?>
 
-<?php echo $data->links(); ?>
+<?php echo $data->appends(Request::except('page'))->links(); ?>
 	
 
 @stop

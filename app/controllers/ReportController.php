@@ -301,7 +301,12 @@ class ReportController extends BaseController {
 			$objPHPExcel->getActiveSheet()->setCellValue('F2', 'จำนวนเงิน');
 			$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(15);	
 			$objPHPExcel->getActiveSheet()->getStyle('F')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1); 
-			
+			$objPHPExcel->getActiveSheet()->setCellValue('G2', 'เล่มที่');
+			$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(15);	
+			$objPHPExcel->getActiveSheet()->setCellValue('H2', 'เลขที่');
+			$objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+
+
 			$objPHPExcel->getActiveSheet()->freezePane('A3');
 
 			$row = 1;
@@ -333,6 +338,9 @@ class ReportController extends BaseController {
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (3, $row+3, $k2->kmoil);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (4, $row+3, $k2->woil);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (5, $row+3, $k2->moneyoil);
+
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (6, $row+3, $k2->bookoil);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (7, $row+3, $k2->numberoil);
 
 					$sumall += $k2->moneyoil;
 					$row++;

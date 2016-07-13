@@ -628,7 +628,7 @@ class ReserveController extends BaseController {
 			$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 			$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 	 
-			$pdf->SetFont('angsanaupc','',14,'',true);
+			$pdf->SetFont('angsanaupc','',13,'',true);
 
 		    $pdf->AddPage();   
 

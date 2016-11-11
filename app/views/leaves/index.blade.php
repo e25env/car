@@ -20,6 +20,12 @@
 
 	<span id='loading'>loading...</span>
 
+	<center>
+		<div>
+			<h2 class="uk-text-danger">การพิมพ์ใบขอรถขอให้ใช้กระดาษ A5 หรือครื่ง A4 นะครับ</h2>
+		</div>
+	</center>
+
 	<div class="uk-grid uk-margin-top">	
 	    <div class="uk-width-medium-1-6">
 	    	<span class="uk-thumbnail uk-border-circle b-b"></span> 

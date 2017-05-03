@@ -108,6 +108,15 @@
 		<span>วัน</span>
 	</div>
 	<div class="uk-margin-top">
+		<span>ค่าใช้จ่ายทั้งหมดในการไปราชการ</span>
+		<span class="g-text"><Input type="text" id="price_use" name="price_use" class="uk-form-small uk-width-1-5" value="{{ $data->price_use }}"/></span>
+		<span>บาท</span>
+	</div>
+	<div class="uk-margin-top">
+		<span>โอกาสในการพัฒนา</span>
+		<span class="g-text"> <textarea id="reuse" name="reuse" cols="100" rows="5">{{ $data->reuse }}</textarea> </span>
+	</div>
+	<div class="uk-margin-top">
 		<span>สำหรับค่าใช้จ่ายในการเดินทางไปราชการขอเบิกจ่ายเงินบำรุงของโรงพยาบาล และขอใช้รถยนต์เดินทางไปราชการครั้งนี้</span>				
 	</div>
 	<div class="uk-margin-top" style="margin-left:20px;">

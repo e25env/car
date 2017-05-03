@@ -521,6 +521,9 @@ class ReserveController extends BaseController {
 
 			$reserve_date = date('Y-m-d');		
 
+			$price_use = Input::get('price_use');
+			$reuse = Input::get('reuse');
+
 			$user_data = array(
             	'department' 		 => $department,
             	'num_nm' 		 	 => $num_nm,
@@ -533,6 +536,8 @@ class ReserveController extends BaseController {
             	'startdate' 	 	 => $fb13,
             	'enddate' 	 	 	 => $fb14, 
             	'allday' 	 	 	 => $allday, 
+				'price_use' 	 	 => $price_use, 
+				'reuse' 	 	 	 => $reuse, 
             	'usecar1' 	 	 	 => $usecar1, 
             	'usecar2' 	 	 	 => $usecar2, 
             	'usecar2_car_number' => $usecar2_car_number,

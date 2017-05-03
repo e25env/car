@@ -74,14 +74,21 @@
 		<Input type="text" <?php echo ($data->driver != '')?'readonly style="color:#000;" ':''; ?> <?php echo (Session::get('level')==2)?'readonly style="color:#000;" ':''; ?> value="{{ $data->godate }}" placeholder="__-__-____" id="godate" name="godate" class="godate uk-form-small uk-width-1-5" />
 	</span>
 	<span class="g-text-error uk-text-danger">*</span>	
+
+	<span> ถึงวันที่(ว-ด-ป)</span>	
+	<span class="g-text">
+		<Input type="text" <?php echo ($data->driver != '')?'readonly style="color:#000;" ':''; ?> <?php echo (Session::get('level')==2)?'readonly style="color:#000;" ':''; ?> value="{{ $data->todate }}" placeholder="__-__-____" id="todate" name="todate" class="godate uk-form-small uk-width-1-5" />
+	</span>
+	<span class="g-text-error uk-text-danger">*</span>	
 	
-	<span>เวลา</span>	
-	<span class="g-text"><Input type="text" <?php echo ($data->driver != '')?'readonly style="color:#000;" ':''; ?> value="{{ $data->gotime_start }}" placeholder="__:__" id="gotime_start" name="gotime_start" class="gotime_start uk-form-small uk-width-1-5" /></span>
-	<span class="g-text-error uk-text-danger">*</span>
-	<span>น.</span>			
+		
 </div>
 
 <div class="uk-margin-top">
+	<span>เวลา</span>	
+	<span class="g-text"><Input type="text" <?php echo ($data->driver != '')?'readonly style="color:#000;" ':''; ?> value="{{ $data->gotime_start }}" placeholder="__:__" id="gotime_start" name="gotime_start" class="gotime_start uk-form-small uk-width-1-5" /></span>
+	<span class="g-text-error uk-text-danger">*</span>
+	<span>น.</span>		
 	<span>ถึงเวลา</span>	
 	<span class="g-text"><Input type="text" <?php echo ($data->driver != '')?'readonly style="color:#000;" ':''; ?> value="{{ $data->gotime_end }}" placeholder="__:__" id="gotime_end" name="gotime_end" class="gotime_end uk-form-small uk-width-1-5" /></span>
 	<span class="g-text-error uk-text-danger">*</span>

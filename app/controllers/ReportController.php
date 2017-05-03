@@ -50,16 +50,18 @@ class ReportController extends BaseController {
 			$objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(15);	
 			$objPHPExcel->getActiveSheet()->setCellValue('C1', 'ไปที่');	
 			$objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(50);	
-			$objPHPExcel->getActiveSheet()->setCellValue('D1', 'หมายเลขทะเบียน');	
-			$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(15);	
-			$objPHPExcel->getActiveSheet()->setCellValue('E1', 'ผู้ขับ');	
-			$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
-			$objPHPExcel->getActiveSheet()->setCellValue('F1', 'ระยะทาง');	
-			$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(10);
-			$objPHPExcel->getActiveSheet()->getStyle('F')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1); 
+			$objPHPExcel->getActiveSheet()->setCellValue('D1', 'ผู้รับผิดชอบ');	
+			$objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(30);	
+			$objPHPExcel->getActiveSheet()->setCellValue('E1', 'หมายเลขทะเบียน');	
+			$objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(15);	
+			$objPHPExcel->getActiveSheet()->setCellValue('F1', 'ผู้ขับ');	
+			$objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(30);
+			$objPHPExcel->getActiveSheet()->setCellValue('G1', 'ระยะทาง');	
+			$objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(10);
+			$objPHPExcel->getActiveSheet()->getStyle('G')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1); 
 			
 
-			$objPHPExcel->getActiveSheet()->getStyle('A1:F1')->getFill()->applyFromArray(
+			$objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFill()->applyFromArray(
 	            array(
 	            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
 	            'startcolor' => array('rgb' => '60D0F2'),
@@ -77,7 +79,7 @@ class ReportController extends BaseController {
 			foreach ( $result1 as $k1 ) 
 			{
 				
-				$sql2  = ' select department,godate,location,car_number,km_driver,driver ';
+				$sql2  = ' select department,godate,location,detail,car_number,km_driver,driver,responsible ';
 				$sql2 .= ' from c_req_cars ';
 				$sql2 .= ' where godate between "'.$datestrart.'" and "'.$dateend.'" ';
 				$sql2 .= ' and department="'.$k1->department.'" and req_status <> 2 ';
@@ -91,9 +93,10 @@ class ReportController extends BaseController {
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (0, $row+2, $k2->department);
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (1, $row+2, date("d-m", strtotime($k2->godate)).'-'.(date("Y", strtotime($k2->godate))+543) );
 					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (2, $row+2, $k2->location);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (3, $row+2, $k2->car_number);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (4, $row+2, $k2->driver);
-					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (5, $row+2, $k2->km_driver);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (3, $row+2, $k2->responsible);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (4, $row+2, $k2->car_number);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (5, $row+2, $k2->driver);
+					$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (6, $row+2, $k2->km_driver);
 					
 					$sumkm += $k2->km_driver;
 
@@ -101,8 +104,8 @@ class ReportController extends BaseController {
 				}	
 
 				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (0, $row+2, 'รวม KM');	
-				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (5, $row+2, $sumkm);											
-				$objPHPExcel->getActiveSheet()->getStyle('A'.($row+2).':F'.($row+2))->getFill()->applyFromArray(
+				$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (6, $row+2, $sumkm);											
+				$objPHPExcel->getActiveSheet()->getStyle('A'.($row+2).':G'.($row+2))->getFill()->applyFromArray(
 		            array(
 		            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
 		            'startcolor' => array('rgb' => 'F6FC53'),
@@ -119,7 +122,7 @@ class ReportController extends BaseController {
 
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (0, $row+3, 'รวม KM ทั้งหมด');	
 			$objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow (5, $row+3, $sumall);											
-			$objPHPExcel->getActiveSheet()->getStyle('A'.($row+3).':F'.($row+3))->getFill()->applyFromArray(
+			$objPHPExcel->getActiveSheet()->getStyle('A'.($row+3).':G'.($row+3))->getFill()->applyFromArray(
 	            array(
 	            'type'       => PHPExcel_Style_Fill::FILL_SOLID,
 	            'startcolor' => array('rgb' => '66F968'),

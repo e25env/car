@@ -18,7 +18,8 @@ class ReqcarController extends BaseController {
     				->orderBy( 'req_status','asc' )
 		    		->orderBy( 'godate','asc' )	
     				->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )
-    				->paginate( 20 );		
+    				->where('godate', '>', DB::Raw('DATE_ADD(now(), INTERVAL -30 DAY)'))
+					->paginate( 30 );		
 	    	return View::make( 'req_cars.index', array( 'data' => $data) );	
     	}
     	else if( Session::get('level') == '2' )
@@ -29,7 +30,8 @@ class ReqcarController extends BaseController {
 		    		->orderBy( 'req_status','asc' )
 		    		->orderBy( 'godate','asc' )	
 		    		->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )
-		    		->paginate( 20 );		
+		    		->where('godate', '>', DB::Raw('DATE_ADD(now(), INTERVAL -30 DAY)'))
+					->paginate( 30 );		
 	    	return View::make( 'req_cars.index', array( 'data' => $data) );	
     	}
     	else if( Session::get('level') == '3' )
@@ -39,7 +41,8 @@ class ReqcarController extends BaseController {
 					//->where( 'godate', '>=', date('Y-m-d') )
 					->orderBy( 'req_status','asc' )
 					->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )
-					->paginate( 10 );		    	
+					->where('godate', '>', DB::Raw('DATE_ADD(now(), INTERVAL -30 DAY)'))
+					->paginate( 30 );		    	
 	    	return View::make( 'req_cars.index', array( 'data' => $data) );	
     	}
     	else
@@ -48,7 +51,8 @@ class ReqcarController extends BaseController {
     		//->where( 'godate', '>=', date('Y-m-d') )
     		->orderBy( 'req_status','asc' )
     		->select( '*', DB::Raw( '(select (select concat(department, " ", concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ), " ", gotime_start) from c_req_cars where req_car_id=c_deposit.req_main_id) from c_deposit where req_sub_id=c_req_cars.req_car_id) as nn' ) )
-    		->paginate( 10 );		
+    		->where('godate', '>', DB::Raw('DATE_ADD(now(), INTERVAL -30 DAY)'))
+			->paginate( 30 );		
 	    	return View::make( 'req_cars.index', array( 'data' => $data) );	
     	}     				    		 					
 	}
@@ -194,7 +198,7 @@ class ReqcarController extends BaseController {
 	    
 		$reserve_id = $formFields[ 'reserve_id' ];		
 		
-	    if ( $formFields['req_date'] == '' || $formFields['req_name'] == '' || $formFields['department'] == '' || $formFields['location'] == '' || $formFields['detail'] == '' || $formFields['qty'] == '' || $formFields['godate'] == '' || $formFields['gotime_start'] == '' || $formFields['gotime_end'] == '' || $formFields['responsible'] == '' || $formFields['upcar1'] == '' || $formFields['user_req'] == '' )
+	    if ( $formFields['req_date'] == '' || $formFields['req_name'] == '' || $formFields['department'] == '' || $formFields['location'] == '' || $formFields['detail'] == '' || $formFields['qty'] == '' || $formFields['godate'] == '' || $formFields['todate'] == '' || $formFields['gotime_start'] == '' || $formFields['gotime_end'] == '' || $formFields['responsible'] == '' || $formFields['upcar1'] == '' || $formFields['user_req'] == '' )
 	    {			
 	        return Response::json(array(
 		          'fail' => true		                       
@@ -222,6 +226,16 @@ class ReqcarController extends BaseController {
 	    	if( $formFields[ 'godate' ] != '' && strlen( str_replace( '-', '', $formFields[ 'godate' ] ) ) == 8 ){
 				$newDate2 		= explode( '-', $formFields[ 'godate' ] );
 				$godate  		= ($newDate2[2]-543).'-'.$newDate2[1].'-'.$newDate2[0];
+			}else{
+				return Response::json(array(
+		          'error_date' => true,
+		          'msg' => 'ไม่สามารถเพิ่มข้อมูลได้ กรุณาตรวจสอบข้อมูล วันที่'		                       
+		        )); 
+			}
+
+			if( $formFields[ 'todate' ] != '' && strlen( str_replace( '-', '', $formFields[ 'todate' ] ) ) == 8 ){
+				$newDate2 		= explode( '-', $formFields[ 'todate' ] );
+				$todate  		= ($newDate2[2]-543).'-'.$newDate2[1].'-'.$newDate2[0];
 			}else{
 				return Response::json(array(
 		          'error_date' => true,
@@ -287,7 +301,7 @@ class ReqcarController extends BaseController {
 	    		$req_status = 0;
 	    	}
 
-	    	$result = DB::insert( 'insert into c_req_cars ( reserve_id, req_date, req_name, position, department, location, detail, qty, godate, gotime_start, gotime_end, responsible, writetime, upcar1, upcar2, upcar3, user_req, car_number,driver, km_driver, driver_control, comment, regis_date, regis_user, req_status  ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )', 
+	    	$result = DB::insert( 'insert into c_req_cars ( reserve_id, req_date, req_name, position, department, location, detail, qty, godate, todate, gotime_start, gotime_end, responsible, writetime, upcar1, upcar2, upcar3, user_req, car_number,driver, km_driver, driver_control, comment, regis_date, regis_user, req_status  ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )', 
             		array( 
             			  $reserve_id,
             			  $req_date,
@@ -298,6 +312,7 @@ class ReqcarController extends BaseController {
             			  $detail,
             			  $qty,
             			  $godate,
+            			  $todate,
             			  $gotime_start,
             			  $gotime_end,
             			  $responsible,
@@ -355,7 +370,7 @@ class ReqcarController extends BaseController {
     	{   		
     		$data = DB::table( 'c_req_cars' )	              
 	        ->where( 'req_car_id', '=', $id )
-	        ->select( '*', DB::raw(' concat( DATE_FORMAT(req_date,"%d-%m"),"-",(year(req_date)+543) ) as req_date')  ,DB::raw(' concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ) as godate') )
+	        ->select( '*', DB::raw(' concat( DATE_FORMAT(req_date,"%d-%m"),"-",(year(req_date)+543) ) as req_date')  ,DB::raw(' concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ) as godate'), DB::raw(' concat( DATE_FORMAT(todate,"%d-%m"),"-",(year(todate)+543) ) as todate') )
 	        ->first(); 
 
     		$dataDep = DB::table('n_department')->get(array( DB::raw('departmentName as value') ) );  
@@ -438,6 +453,7 @@ class ReqcarController extends BaseController {
 			'detail'      		=> 'required',
 			'qty'      	  		=> 'required',
 			'godate'      	 	=> 'required',
+			'todate'      	 	=> 'required',
 			'gotime_start'   	=> 'required',
 			'gotime_end'   		=> 'required',
 			'responsible'   	=> 'required',
@@ -451,6 +467,7 @@ class ReqcarController extends BaseController {
 				'detail.required'     	 => '*',
 				'qty.required'     		 => '*',
 				'godate.required'     	 => '*',
+				'todate.required'     	 => '*',
 				'gotime_start.required'  => '*',
 				'gotime_end.required'  	 => '*',
 				'responsible.required'   => '*',
@@ -505,6 +522,14 @@ class ReqcarController extends BaseController {
 					return Redirect::to( 'reqcar' )->with( 'error_message', 'ไม่สามารถเพิ่มข้อมูลได้ กรุณาตรวจสอบข้อมูล วันที่' ); 
 				}
 
+				if( Input::get( 'todate' ) != '' && strlen(str_replace('-', '', Input::get( 'todate' ))) == 8 ){
+				$newDate2 		= explode('-', Input::get( 'todate' ));
+				$todate  		= ($newDate2[2]-543).'-'.$newDate2[1].'-'.$newDate2[0];
+				}else{
+					return Redirect::to( 'reqcar' )->with( 'error_message', 'ไม่สามารถเพิ่มข้อมูลได้ กรุณาตรวจสอบข้อมูล วันที่' ); 
+				}
+
+
 				$qty  			 = Input::get( 'qty' );	    		    	
 		    	$gotime_start  	 = Input::get( 'gotime_start' );
 		    	$gotime_end  	 = Input::get( 'gotime_end' );    	
@@ -555,6 +580,7 @@ class ReqcarController extends BaseController {
 		    		'detail' 		=> $detail,
 		    		'qty' 			=> $qty,
 		    		'godate' 		=> $godate,
+		    		'todate' 		=> $todate,
 		    		'gotime_start' 	=> $gotime_start,
 		    		'gotime_end' 	=> $gotime_end,
 		    		'responsible' 	=> $responsible,
@@ -658,7 +684,7 @@ class ReqcarController extends BaseController {
     	{   		
     		$data = DB::table( 'c_req_cars' )	              
 	        ->where( 'req_car_id', '=', $id )
-	        ->select( '*', DB::raw(' concat( DATE_FORMAT(req_date,"%d-%m"),"-",(year(req_date)+543) ) as req_date')  ,DB::raw(' concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ) as godate') )
+	        ->select( '*', DB::raw(' concat( DATE_FORMAT(req_date,"%d-%m"),"-",(year(req_date)+543) ) as req_date')  ,DB::raw(' concat( DATE_FORMAT(godate,"%d-%m"),"-",(year(godate)+543) ) as godate'),DB::raw(' concat( DATE_FORMAT(todate,"%d-%m"),"-",(year(todate)+543) ) as todate') )
 	        ->first(); 
 
     		$dataDep = DB::table('n_department')->get(array( DB::raw('departmentName as value') ) );  
@@ -911,12 +937,14 @@ class ReqcarController extends BaseController {
 				$pdf->MultiCell(170, 0, $key->detail, 0, 'L', 0, 1, '', '', true);				
 				
 				$pdf->SetXY(3, 30);
-				$pdf->MultiCell(181, 0, 'มีคนนั่ง................คน  ในวันที่.....................................................................  เวลา...........................................น.', 0, 'L', 0, 1, '', '', true);				
+				$pdf->MultiCell(181, 0, 'มีคนนั่ง................คน  ในวันที่..................................................................... ถึงวันที่.....................................................................  เวลา...........................................น.', 0, 'L', 0, 1, '', '', true);				
 				$pdf->SetXY(6, 30);
 				$pdf->MultiCell(20, 0, $key->qty, 0, 'C', 0, 1, '', '', true);
 				$pdf->SetXY(20, 30);
 				$pdf->MultiCell(70, 0, ($key->godate=='0000-00-00')?'':$this->get_monthyearThai( $key->godate ), 0, 'C', 0, 1, '', '', true);
-				$pdf->SetXY(82, 30);
+				$pdf->SetXY(70, 30);
+				$pdf->MultiCell(70, 0, ($key->godate=='0000-00-00')?'':$this->get_monthyearThai( $key->todate ), 0, 'C', 0, 1, '', '', true);
+				$pdf->SetXY(128, 30);
 				$pdf->MultiCell(30, 0, $key->gotime_start, 0, 'C', 0, 1, '', '', true);
 				
 				$pdf->SetXY(3, 37);

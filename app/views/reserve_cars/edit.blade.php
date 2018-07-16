@@ -195,7 +195,7 @@
 		<span>ผู้อนุมัติ</span>			
 	</div>
 	<div class="uk-margin-top uk-text-center">			
-		<span>(นายบุญชัย ธนบัตรชัย)</span>						
+		<span>(นายสมเกียรติ สอดโคกสูง)</span>						
 	</div>
 	<div class="uk-margin-top uk-text-center">					
 		<span>ผู้อำนวยการโรงพยาบาลโนนไทย</span>						
